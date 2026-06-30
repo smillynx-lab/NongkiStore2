@@ -679,8 +679,42 @@ function CartModal({
                   <Coins className="w-5 h-5 text-amber-400" />
                 </div>
               </div>
-              <button className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-lg rounded-2xl shadow-lg shadow-amber-500/30 hover:from-amber-600 hover:to-orange-600 transition-all">
-                Checkout
+              <button
+                onClick={() => {
+                  if (cart.length === 0) return;
+
+                  const pesan = cart
+                    .map(
+                      (item) =>
+                        `• ${item.item.name} x${item.quantity} = ${(
+                          item.item.price * item.quantity
+                        ).toLocaleString("id-ID")}`
+                    )
+                    .join("\n");
+
+                  const total = cart.reduce(
+                    (sum, item) => sum + item.item.price * item.quantity,
+                    0
+                  );
+
+                  const text = `Halo NongkiStore!
+
+Saya ingin melakukan pemesanan.
+
+${pesan}
+
+Total: ${total.toLocaleString("id-ID")}
+
+Terima kasih.`;
+
+                  window.open(
+                    `https://wa.me/6285338506309?text=${encodeURIComponent(text)}`,
+                    "_blank"
+                  );
+                }}
+                className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-2xl hover:scale-[1.02] transition-all"
+              >
+                Checkout via WhatsApp
               </button>
             </div>
           </>

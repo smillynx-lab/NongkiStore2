@@ -119,69 +119,28 @@ function App() {
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-400 rounded-full animate-ping" />
               </div>
               <div>
-                <h1 className="text-2xl font-black bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                  NongkiStore
-                </h1>
+                <h1 className="text-2xl font-black bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">NongkiStore</h1>
                 <p className="text-xs text-slate-400 font-medium tracking-wider">GAME ITEM SHOP</p>
               </div>
             </div>
 
             <nav className="flex items-center gap-2">
-              <button
-                onClick={() => setView('home')}
-                className={`px-5 py-2.5 rounded-xl font-semibold transition-all flex items-center gap-2 ${
-                  view === 'home'
-                    ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg shadow-emerald-500/30'
-                    : 'text-slate-300 hover:bg-slate-700/50'
-                }`}
-              >
+              <button onClick={() => setView('home')} className={`px-5 py-2.5 rounded-xl font-semibold transition-all flex items-center gap-2 ${view === 'home' ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg shadow-emerald-500/30' : 'text-slate-300 hover:bg-slate-700/50'}`}>
                 <Home className="w-4 h-4" />
                 <span>Home</span>
               </button>
-
-              <button
-                onClick={() => {
-                  setView('items');
-                  setSelectedCategory(null);
-                  setSelectedPetSize(null);
-                }}
-                className={`px-5 py-2.5 rounded-xl font-semibold transition-all flex items-center gap-2 ${
-                  view === 'items'
-                    ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg shadow-emerald-500/30'
-                    : 'text-slate-300 hover:bg-slate-700/50'
-                }`}
-              >
+              <button onClick={() => { setView('items'); setSelectedCategory(null); setSelectedPetSize(null); }} className={`px-5 py-2.5 rounded-xl font-semibold transition-all flex items-center gap-2 ${view === 'items' ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg shadow-emerald-500/30' : 'text-slate-300 hover:bg-slate-700/50'}`}>
                 <Package className="w-4 h-4" />
                 <span>Items</span>
               </button>
-
-              <button
-                onClick={() => {
-                  setView('sheckles');
-                  setSelectedCategory(null);
-                  setSelectedPetSize(null);
-                }}
-                className={`px-5 py-2.5 rounded-xl font-semibold transition-all flex items-center gap-2 ${
-                  view === 'sheckles'
-                    ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg shadow-emerald-500/30'
-                    : 'text-slate-300 hover:bg-slate-700/50'
-                }`}
-              >
+              <button onClick={() => { setView('sheckles'); setSelectedCategory(null); setSelectedPetSize(null); }} className={`px-5 py-2.5 rounded-xl font-semibold transition-all flex items-center gap-2 ${view === 'sheckles' ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg shadow-emerald-500/30' : 'text-slate-300 hover:bg-slate-700/50'}`}>
                 <Coins className="w-4 h-4" />
                 <span>Sheckles</span>
               </button>
-
-              <button
-                onClick={() => setShowCart(true)}
-                className="relative ml-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold shadow-lg shadow-amber-500/30 flex items-center gap-2 hover:from-amber-600 hover:to-orange-600 transition-all"
-              >
+              <button onClick={() => setShowCart(true)} className="relative ml-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold shadow-lg shadow-amber-500/30 flex items-center gap-2 hover:from-amber-600 hover:to-orange-600 transition-all">
                 <ShoppingBag className="w-4 h-4" />
                 <span>Cart</span>
-                {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 w-6 h-6 bg-rose-500 text-white text-xs rounded-full flex items-center justify-center font-bold shadow-lg animate-bounce">
-                    {cartCount}
-                  </span>
-                )}
+                {cartCount > 0 && <span className="absolute -top-2 -right-2 w-6 h-6 bg-rose-500 text-white text-xs rounded-full flex items-center justify-center font-bold shadow-lg animate-bounce">{cartCount}</span>}
               </button>
             </nav>
           </div>
@@ -196,16 +155,7 @@ function App() {
           </div>
         ) : (
           <>
-            {view === 'home' && (
-              <HomeView
-                featuredItems={featuredItems}
-                categories={categories}
-                items={items}
-                addToCart={addToCart}
-                cart={cart}
-                onViewItems={() => setView('items')}
-              />
-            )}
+            {view === 'home' && <HomeView featuredItems={featuredItems} categories={categories} items={items} addToCart={addToCart} cart={cart} onViewItems={() => setView('items')} />}
             {view === 'items' && (
               <ItemsView
                 items={items}
@@ -222,22 +172,12 @@ function App() {
                 onOpenSheckles={() => setView('sheckles')}
               />
             )}
-            {view === 'sheckles' && (
-              <ShecklesView items={shecklesItems} addToCart={addToCart} cart={cart} />
-            )}
+            {view === 'sheckles' && <ShecklesView items={shecklesItems} addToCart={addToCart} cart={cart} />}
           </>
         )}
       </main>
 
-      {showCart && (
-        <CartModal
-          cart={cart}
-          cartTotal={cartTotal}
-          removeFromCart={removeFromCart}
-          updateCartQuantity={updateCartQuantity}
-          onClose={() => setShowCart(false)}
-        />
-      )}
+      {showCart && <CartModal cart={cart} cartTotal={cartTotal} removeFromCart={removeFromCart} updateCartQuantity={updateCartQuantity} onClose={() => setShowCart(false)} />}
     </div>
   );
 }
@@ -257,20 +197,7 @@ type ItemsViewProps = {
   onOpenSheckles: () => void;
 };
 
-function ItemsView({
-  items,
-  categories,
-  petSizes,
-  searchQuery,
-  setSearchQuery,
-  selectedCategory,
-  setSelectedCategory,
-  selectedPetSize,
-  setSelectedPetSize,
-  addToCart,
-  cart,
-  onOpenSheckles,
-}: ItemsViewProps) {
+function ItemsView({ items, categories, petSizes, searchQuery, setSearchQuery, selectedCategory, setSelectedCategory, selectedPetSize, setSelectedPetSize, addToCart, cart, onOpenSheckles }: ItemsViewProps) {
   const navCategories = categories.filter((c) => c.slug !== 'sheckles');
 
   const filteredItems = items.filter((item) => {
@@ -288,39 +215,19 @@ function ItemsView({
           <Package className="w-8 h-8 text-emerald-400" />
           <h3 className="text-3xl font-bold text-white">Game Items</h3>
         </div>
-        <button
-          onClick={onOpenSheckles}
-          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold shadow-lg shadow-amber-500/30 hover:from-amber-600 hover:to-orange-600 transition-all flex items-center gap-2"
-        >
+        <button onClick={onOpenSheckles} className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold shadow-lg shadow-amber-500/30 hover:from-amber-600 hover:to-orange-600 transition-all flex items-center gap-2">
           <Coins className="w-4 h-4" />
           Sheckles
         </button>
       </div>
 
       <div className="flex gap-3 mb-8 overflow-x-auto pb-2">
-        <button
-          onClick={() => {
-            setSelectedCategory(null);
-            setSelectedPetSize(null);
-          }}
-          className={`px-5 py-3 rounded-xl font-semibold whitespace-nowrap transition-all ${
-            !selectedCategory ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-          }`}
-        >
+        <button onClick={() => { setSelectedCategory(null); setSelectedPetSize(null); }} className={`px-5 py-3 rounded-xl font-semibold whitespace-nowrap transition-all ${!selectedCategory ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}>
           Semua Item
         </button>
 
         {navCategories.map((cat) => (
-          <button
-            key={cat.id}
-            onClick={() => {
-              setSelectedCategory(cat.id);
-              setSelectedPetSize(null);
-            }}
-            className={`px-5 py-3 rounded-xl font-semibold whitespace-nowrap transition-all flex items-center gap-2 ${
-              selectedCategory === cat.id ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-            }`}
-          >
+          <button key={cat.id} onClick={() => { setSelectedCategory(cat.id); setSelectedPetSize(null); }} className={`px-5 py-3 rounded-xl font-semibold whitespace-nowrap transition-all flex items-center gap-2 ${selectedCategory === cat.id ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}>
             <span>{cat.icon}</span>
             <span>{cat.name}</span>
           </button>
@@ -345,13 +252,7 @@ function ItemsView({
 
         <div className="relative min-w-[250px] ml-auto">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Cari item..."
-            className="w-full pl-12 pr-4 py-3 rounded-xl bg-slate-800 border border-slate-600 text-white placeholder-slate-400"
-          />
+          <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Cari item..." className="w-full pl-12 pr-4 py-3 rounded-xl bg-slate-800 border border-slate-600 text-white placeholder-slate-400" />
         </div>
       </div>
 
@@ -384,13 +285,8 @@ function HomeView({ featuredItems, categories, items, addToCart, cart, onViewIte
           <p className="text-xl text-slate-300 mb-4">
             di <span className="text-emerald-400 font-bold">NongkiStore</span>, toko item game terbaik!
           </p>
-          <p className="text-slate-400 max-w-2xl mx-auto">
-            Temukan Seeds langka, Pets keren, Gear powerful, dan Sheckles untuk permainan Anda
-          </p>
-          <button
-            onClick={onViewItems}
-            className="mt-8 px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold text-lg rounded-2xl shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all transform hover:scale-105"
-          >
+          <p className="text-slate-400 max-w-2xl mx-auto">Temukan Seeds langka, Pets keren, Gear powerful, dan Sheckles untuk permainan Anda</p>
+          <button onClick={onViewItems} className="mt-8 px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold text-lg rounded-2xl shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all transform hover:scale-105">
             Lihat Semua Item
           </button>
         </div>
@@ -417,11 +313,7 @@ function HomeView({ featuredItems, categories, items, addToCart, cart, onViewIte
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {categories.map((cat: Category) => (
-            <div
-              key={cat.id}
-              className="group relative bg-gradient-to-br from-slate-800 to-slate-700 rounded-2xl p-6 border border-slate-600/50 hover:border-emerald-400/50 transition-all cursor-pointer overflow-hidden"
-              onClick={onViewItems}
-            >
+            <div key={cat.id} className="group relative bg-gradient-to-br from-slate-800 to-slate-700 rounded-2xl p-6 border border-slate-600/50 hover:border-emerald-400/50 transition-all cursor-pointer overflow-hidden" onClick={onViewItems}>
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-500/20 to-transparent rounded-full blur-2xl group-hover:from-emerald-400/30 transition-all" />
               <div className="text-5xl mb-4">{cat.icon}</div>
               <h4 className="text-xl font-bold text-white mb-1">{cat.name}</h4>
@@ -454,9 +346,7 @@ function ShecklesView({ items, addToCart, cart }: { items: Item[]; addToCart: (i
             <p className="text-amber-300">Mata uang game untuk pembelian item premium</p>
           </div>
         </div>
-        <p className="text-slate-300 text-sm">
-          Dapatkan Sheckles untuk membuka item-item eksklusif di game. Semakin banyak Sheckles yang Anda miliki, semakin banyak item langka yang bisa Anda dapatkan!
-        </p>
+        <p className="text-slate-300 text-sm">Dapatkan Sheckles untuk membuka item-item eksklusif di game. Semakin banyak Sheckles yang Anda miliki, semakin banyak item langka yang bisa Anda dapatkan!</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -609,19 +499,11 @@ function CartModal({
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => updateCartQuantity(c.item.id, c.quantity - 1)}
-                      disabled={c.quantity <= 1}
-                      className="w-8 h-8 rounded-lg bg-slate-700 text-white flex items-center justify-center hover:bg-slate-600 disabled:opacity-50"
-                    >
+                    <button onClick={() => updateCartQuantity(c.item.id, c.quantity - 1)} disabled={c.quantity <= 1} className="w-8 h-8 rounded-lg bg-slate-700 text-white flex items-center justify-center hover:bg-slate-600 disabled:opacity-50">
                       -
                     </button>
                     <span className="w-8 text-center text-white font-semibold">{c.quantity}</span>
-                    <button
-                      onClick={() => updateCartQuantity(c.item.id, c.quantity + 1)}
-                      disabled={c.quantity >= c.item.stock}
-                      className="w-8 h-8 rounded-lg bg-slate-700 text-white flex items-center justify-center hover:bg-slate-600 disabled:opacity-50"
-                    >
+                    <button onClick={() => updateCartQuantity(c.item.id, c.quantity + 1)} disabled={c.quantity >= c.item.stock} className="w-8 h-8 rounded-lg bg-slate-700 text-white flex items-center justify-center hover:bg-slate-600 disabled:opacity-50">
                       +
                     </button>
                   </div>
@@ -649,9 +531,7 @@ function CartModal({
               <button
                 onClick={() => {
                   if (cart.length === 0) return;
-                  const pesan = cart
-                    .map((item) => `• ${item.item.name} x${item.quantity} = ${(item.item.price * item.quantity).toLocaleString('id-ID')}`)
-                    .join('\n');
+                  const pesan = cart.map((item) => `• ${item.item.name} x${item.quantity} = ${(item.item.price * item.quantity).toLocaleString('id-ID')}`).join('\n');
                   const total = cart.reduce((sum, item) => sum + item.item.price * item.quantity, 0);
                   const text = `Halo NongkiStore!\n\nSaya ingin melakukan pemesanan.\n\n${pesan}\n\nTotal: ${total.toLocaleString('id-ID')}\n\nTerima kasih.`;
                   window.open(`https://wa.me/6285338506309?text=${encodeURIComponent(text)}`, '_blank');

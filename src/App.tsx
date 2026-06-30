@@ -28,7 +28,6 @@ const RARITY_COLORS: Record<string, string> = {
   Epic: 'from-purple-400 to-purple-500',
   Legendary: 'from-amber-400 to-orange-500',
   Mythic: 'from-red-400 to-pink-500',
-  Super: 'from-pink-500 via-yellow-400 via-green-400 via-cyan-400 to-purple-500',
 };
 
 const RARITY_BG: Record<string, string> = {
@@ -38,7 +37,6 @@ const RARITY_BG: Record<string, string> = {
   Epic: 'bg-purple-50 border-purple-200',
   Legendary: 'bg-amber-50 border-amber-200',
   Mythic: 'bg-red-50 border-red-200',
-  Super: 'bg-white border-transparent',
 };
 
 const RARITY_TEXT: Record<string, string> = {
@@ -48,7 +46,6 @@ const RARITY_TEXT: Record<string, string> = {
   Epic: 'text-purple-600',
   Legendary: 'text-amber-600',
   Mythic: 'text-red-600',
-  Super: 'text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-yellow-400 via-green-400 to-cyan-400',
 };
 
 function App() {
@@ -112,19 +109,33 @@ function App() {
   const cartCount = cart.reduce((sum, c) => sum + c.quantity, 0);
 
   const featuredItems = items.filter((i) => i.is_featured);
-  const shecklesItems = items.filter((i) => i.categories?.slug === 'sheckles');
+
+  const getFilteredItems = (categorySlug: string) => {
+    return items.filter((item) => {
+      const category = item.categories;
+      if (!category || category.slug !== categorySlug) return false;
+      if (selectedPetSize && category.slug === 'pets' && item.pet_size_id !== selectedPetSize) return false;
+      if (searchQuery && !item.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+      return true;
+    });
+  };
+
+  const shecklesItems = getFilteredItems('sheckles');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      {/* Animated Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-40 -left-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
         <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-500" />
       </div>
 
+      {/* Header */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-900/70 border-b border-slate-700/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-18 py-3">
+            {/* Logo */}
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => setView('home')}>
               <div className="relative">
                 <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 via-cyan-400 to-blue-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30 transform hover:scale-105 transition-transform">
@@ -140,6 +151,7 @@ function App() {
               </div>
             </div>
 
+            {/* Navigation */}
             <nav className="flex items-center gap-2">
               <button
                 onClick={() => setView('home')}
@@ -191,6 +203,7 @@ function App() {
         </div>
       </header>
 
+      {/* Main Content */}
       <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-32">
@@ -224,11 +237,18 @@ function App() {
                 cart={cart}
               />
             )}
-            {view === 'sheckles' && <ShecklesView items={shecklesItems} addToCart={addToCart} cart={cart} />}
+            {view === 'sheckles' && (
+              <ShecklesView
+                items={shecklesItems}
+                addToCart={addToCart}
+                cart={cart}
+              />
+            )}
           </>
         )}
       </main>
 
+      {/* Cart Modal */}
       {showCart && (
         <CartModal
           cart={cart}
@@ -242,14 +262,31 @@ function App() {
   );
 }
 
-function HomeView({ featuredItems, categories, items, addToCart, cart, onViewItems }: any) {
+function HomeView({
+  featuredItems,
+  categories,
+  items,
+  addToCart,
+  cart,
+  onViewItems,
+}: {
+  featuredItems: Item[];
+  categories: Category[];
+  items: Item[];
+  addToCart: (item: Item) => void;
+  cart: CartItem[];
+  onViewItems: () => void;
+}) {
   return (
     <div>
+      {/* Hero Section */}
       <div className="relative text-center py-16 mb-12">
         <div className="relative z-10">
           <div className="flex items-center justify-center gap-3 mb-6">
             <Flame className="w-8 h-8 text-orange-400 animate-pulse" />
-            <h2 className="text-4xl md:text-6xl font-black text-white">Selamat Datang</h2>
+            <h2 className="text-4xl md:text-6xl font-black text-white">
+              Selamat Datang
+            </h2>
             <Flame className="w-8 h-8 text-orange-400 animate-pulse" />
           </div>
           <p className="text-xl text-slate-300 mb-4">
@@ -267,6 +304,7 @@ function HomeView({ featuredItems, categories, items, addToCart, cart, onViewIte
         </div>
       </div>
 
+      {/* Best Sellers */}
       <section className="mb-16">
         <div className="flex items-center gap-3 mb-8">
           <Star className="w-8 h-8 text-amber-400" />
@@ -274,12 +312,13 @@ function HomeView({ featuredItems, categories, items, addToCart, cart, onViewIte
           <div className="flex-1 h-px bg-gradient-to-r from-amber-400/50 to-transparent" />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredItems.slice(0, 8).map((item: Item) => (
+          {featuredItems.slice(0, 8).map((item) => (
             <ItemCard key={item.id} item={item} addToCart={addToCart} cart={cart} />
           ))}
         </div>
       </section>
 
+      {/* Categories */}
       <section>
         <div className="flex items-center gap-3 mb-8">
           <Zap className="w-8 h-8 text-cyan-400" />
@@ -287,7 +326,7 @@ function HomeView({ featuredItems, categories, items, addToCart, cart, onViewIte
           <div className="flex-1 h-px bg-gradient-to-r from-cyan-400/50 to-transparent" />
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {categories.map((cat: Category) => (
+          {categories.map((cat) => (
             <div
               key={cat.id}
               className="group relative bg-gradient-to-br from-slate-800 to-slate-700 rounded-2xl p-6 border border-slate-600/50 hover:border-emerald-400/50 transition-all cursor-pointer overflow-hidden"
@@ -297,7 +336,9 @@ function HomeView({ featuredItems, categories, items, addToCart, cart, onViewIte
               <div className="text-5xl mb-4">{cat.icon}</div>
               <h4 className="text-xl font-bold text-white mb-1">{cat.name}</h4>
               <p className="text-slate-400 text-sm">{cat.description}</p>
-              <p className="mt-3 text-emerald-400 font-semibold">{items.filter((i: Item) => i.category_id === cat.id).length} items</p>
+              <p className="mt-3 text-emerald-400 font-semibold">
+                {items.filter((i) => i.category_id === cat.id).length} items
+              </p>
             </div>
           ))}
         </div>
@@ -306,8 +347,32 @@ function HomeView({ featuredItems, categories, items, addToCart, cart, onViewIte
   );
 }
 
-function ItemsView({ items, categories, petSizes, searchQuery, setSearchQuery, selectedCategory, setSelectedCategory, selectedPetSize, setSelectedPetSize, addToCart, cart }: any) {
-  const filteredItems = items.filter((item: Item) => {
+function ItemsView({
+  items,
+  categories,
+  petSizes,
+  searchQuery,
+  setSearchQuery,
+  selectedCategory,
+  setSelectedCategory,
+  selectedPetSize,
+  setSelectedPetSize,
+  addToCart,
+  cart,
+}: {
+  items: Item[];
+  categories: Category[];
+  petSizes: PetSize[];
+  searchQuery: string;
+  setSearchQuery: (q: string) => void;
+  selectedCategory: string | null;
+  setSelectedCategory: (c: string | null) => void;
+  selectedPetSize: string | null;
+  setSelectedPetSize: (s: string | null) => void;
+  addToCart: (item: Item) => void;
+  cart: CartItem[];
+}) {
+  const filteredItems = items.filter((item) => {
     if (item.categories?.slug === 'sheckles') return false;
     if (selectedCategory && item.category_id !== selectedCategory) return false;
     if (selectedPetSize && item.pet_size_id !== selectedPetSize) return false;
@@ -315,7 +380,7 @@ function ItemsView({ items, categories, petSizes, searchQuery, setSearchQuery, s
     return true;
   });
 
-  const itemCategories = categories.filter((c: Category) => c.slug !== 'sheckles');
+  const itemCategories = categories.filter((c) => c.slug !== 'sheckles');
 
   return (
     <div>
@@ -325,6 +390,7 @@ function ItemsView({ items, categories, petSizes, searchQuery, setSearchQuery, s
         <div className="flex-1 h-px bg-gradient-to-r from-emerald-400/50 to-transparent" />
       </div>
 
+      {/* Filters */}
       <div className="flex flex-wrap gap-4 mb-8">
         <div className="relative flex-1 min-w-[250px]">
           <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -344,7 +410,7 @@ function ItemsView({ items, categories, petSizes, searchQuery, setSearchQuery, s
             className="pl-12 pr-10 py-3 rounded-xl bg-slate-800 border border-slate-600 text-white appearance-none cursor-pointer min-w-[180px]"
           >
             <option value="">Semua Kategori</option>
-            {itemCategories.map((cat: Category) => (
+            {itemCategories.map((cat) => (
               <option key={cat.id} value={cat.id}>
                 {cat.icon} {cat.name}
               </option>
@@ -352,7 +418,7 @@ function ItemsView({ items, categories, petSizes, searchQuery, setSearchQuery, s
           </select>
           <ChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
         </div>
-        {selectedCategory && categories.find((c: Category) => c.id === selectedCategory)?.slug === 'pets' && (
+        {selectedCategory && categories.find((c) => c.id === selectedCategory)?.slug === 'pets' && (
           <div className="relative">
             <Ghost className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
             <select
@@ -361,7 +427,7 @@ function ItemsView({ items, categories, petSizes, searchQuery, setSearchQuery, s
               className="pl-12 pr-10 py-3 rounded-xl bg-slate-800 border border-slate-600 text-white appearance-none cursor-pointer min-w-[150px]"
             >
               <option value="">Semua Ukuran</option>
-              {petSizes.map((size: PetSize) => (
+              {petSizes.map((size) => (
                 <option key={size.id} value={size.id}>
                   {size.name}
                 </option>
@@ -379,7 +445,7 @@ function ItemsView({ items, categories, petSizes, searchQuery, setSearchQuery, s
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredItems.map((item: Item) => (
+          {filteredItems.map((item) => (
             <ItemCard key={item.id} item={item} addToCart={addToCart} cart={cart} />
           ))}
         </div>
@@ -388,7 +454,15 @@ function ItemsView({ items, categories, petSizes, searchQuery, setSearchQuery, s
   );
 }
 
-function ShecklesView({ items, addToCart, cart }: any) {
+function ShecklesView({
+  items,
+  addToCart,
+  cart,
+}: {
+  items: Item[];
+  addToCart: (item: Item) => void;
+  cart: CartItem[];
+}) {
   return (
     <div>
       <div className="flex items-center gap-3 mb-8">
@@ -413,7 +487,7 @@ function ShecklesView({ items, addToCart, cart }: any) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {items.map((item: Item) => (
+        {items.map((item) => (
           <ItemCard key={item.id} item={item} addToCart={addToCart} cart={cart} />
         ))}
       </div>
@@ -424,14 +498,16 @@ function ShecklesView({ items, addToCart, cart }: any) {
 function ItemCard({ item, addToCart, cart }: { item: Item; addToCart: (item: Item) => void; cart: CartItem[] }) {
   const inCart = cart.find((c) => c.item.id === item.id);
   const canAdd = item.stock > 0 && (!inCart || inCart.quantity < item.stock);
-  const isSheckles = item.categories?.slug === 'sheckles';
   const rarityColor = RARITY_COLORS[item.rarity] || RARITY_COLORS.Common;
   const rarityBg = RARITY_BG[item.rarity] || RARITY_BG.Common;
   const rarityText = RARITY_TEXT[item.rarity] || RARITY_TEXT.Common;
 
   return (
     <div className="group relative bg-gradient-to-br from-slate-800 to-slate-800/50 rounded-2xl overflow-hidden border border-slate-600/50 hover:border-slate-500 transition-all duration-300">
+      {/* Rarity glow */}
       <div className={`absolute inset-0 pointer-events-none bg-gradient-to-br ${rarityColor} opacity-0 group-hover:opacity-10 transition-opacity`} />
+
+      {/* Image */}
       <div className="relative aspect-square bg-gradient-to-br from-slate-700 to-slate-800 overflow-hidden">
         {item.image_url ? (
           <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
@@ -446,21 +522,22 @@ function ItemCard({ item, addToCart, cart }: { item: Item; addToCart: (item: Ite
           </div>
         )}
 
-        {!isSheckles && (
-          <div className={`absolute top-3 left-3 px-3 py-1 rounded-full border ${rarityBg} ${rarityText} text-xs font-bold uppercase tracking-wider flex items-center gap-1`}>
-            {item.rarity === 'Mythic' && <Crown className="w-3 h-3" />}
-            {item.rarity === 'Legendary' && <Diamond className="w-3 h-3" />}
-            {item.rarity === 'Epic' && <Star className="w-3 h-3" />}
-            {item.rarity}
-          </div>
-        )}
+        {/* Rarity badge */}
+        <div className={`absolute top-3 left-3 px-3 py-1 rounded-full border ${rarityBg} ${rarityText} text-xs font-bold uppercase tracking-wider flex items-center gap-1`}>
+          {item.rarity === 'Mythic' && <Crown className="w-3 h-3" />}
+          {item.rarity === 'Legendary' && <Diamond className="w-3 h-3" />}
+          {item.rarity === 'Epic' && <Star className="w-3 h-3" />}
+          {item.rarity}
+        </div>
 
+        {/* Pet size badge */}
         {item.pet_sizes && (
           <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-slate-900/80 text-cyan-400 text-xs font-bold border border-cyan-400/30">
             {item.pet_sizes.name}
           </div>
         )}
 
+        {/* Stock indicator */}
         {item.stock === 0 && (
           <div className="absolute inset-0 bg-slate-900/80 flex items-center justify-center">
             <span className="px-4 py-2 bg-rose-500/20 text-rose-400 rounded-lg font-bold border border-rose-500/30">
@@ -470,6 +547,7 @@ function ItemCard({ item, addToCart, cart }: { item: Item; addToCart: (item: Ite
         )}
       </div>
 
+      {/* Content */}
       <div className="p-5">
         <div className="mb-2">
           <span className="text-xs font-medium text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded">
@@ -601,34 +679,8 @@ function CartModal({
                   <Coins className="w-5 h-5 text-amber-400" />
                 </div>
               </div>
-              <button
-                onClick={() => {
-                  if (cart.length === 0) return;
-
-                  const pesan = cart
-                    .map(
-                      (item) =>
-                        `• ${item.item.name} x${item.quantity} = ${(
-                          item.item.price * item.quantity
-                        ).toLocaleString("id-ID")}`
-                    )
-                    .join("\n");
-
-                  const total = cart.reduce(
-                    (sum, item) => sum + item.item.price * item.quantity,
-                    0
-                  );
-
-                  const text = `Halo NongkiStore!\n\nSaya ingin melakukan pemesanan.\n\n${pesan}\n\nTotal: ${total.toLocaleString("id-ID")}\n\nTerima kasih.`;
-
-                  window.open(
-                    `https://wa.me/6285338506309?text=${encodeURIComponent(text)}`,
-                    "_blank"
-                  );
-                }}
-                className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-2xl hover:scale-[1.02] transition-all"
-              >
-                Checkout via WhatsApp
+              <button className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-lg rounded-2xl shadow-lg shadow-amber-500/30 hover:from-amber-600 hover:to-orange-600 transition-all">
+                Checkout
               </button>
             </div>
           </>

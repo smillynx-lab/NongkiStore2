@@ -46,7 +46,7 @@ const RARITY_TEXT: Record<string, string> = {
   Epic: 'text-purple-600',
   Legendary: 'text-amber-600',
   Mythic: 'text-red-600',
-  Super: 'text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-yellow-400 via-green-400 to-cyan-400 animate-pulse',
+  Super: 'text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-yellow-400 via-green-400 via-cyan-400 to-purple-500 animate-pulse',
 };
 
 function App() {

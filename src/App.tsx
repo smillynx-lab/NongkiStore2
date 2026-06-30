@@ -505,7 +505,7 @@ function ItemCard({ item, addToCart, cart }: { item: Item; addToCart: (item: Ite
   return (
     <div className="group relative bg-gradient-to-br from-slate-800 to-slate-800/50 rounded-2xl overflow-hidden border border-slate-600/50 hover:border-slate-500 transition-all duration-300">
       {/* Rarity glow */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${rarityColor} opacity-0 group-hover:opacity-10 transition-opacity`} />
+      <div className={`absolute inset-0 pointer-events-none bg-gradient-to-br ${rarityColor} opacity-0 group-hover:opacity-10 transition-opacity`} />
 
       {/* Image */}
       <div className="relative aspect-square bg-gradient-to-br from-slate-700 to-slate-800 overflow-hidden">
